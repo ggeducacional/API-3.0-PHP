@@ -59,7 +59,7 @@ abstract class AbstractRequest
         $curl = curl_init($url);
 
         curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
         switch ($method) {
             case 'GET':
@@ -104,7 +104,9 @@ abstract class AbstractRequest
         if (curl_errno($curl)) {
             $message = sprintf('cURL error[%s]: %s', curl_errno($curl), curl_error($curl));
 
-            $this->logger->error($message);
+            if ($this->logger !== null) {
+                $this->logger->error($message);
+            }
 
             throw new \RuntimeException($message);
         }
